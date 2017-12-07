@@ -195,7 +195,9 @@ class ApproximateQAgent(PacmanQAgent):
         """
         # Use self.featExtractor.getFeatures(state,action) to get the features
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        features = self.featExtractor.getFeatures(state, action)
+        return features * self.getWeights()
+        # util.raiseNotDefined()
 
     def update(self, state, action, nextState, reward):
         """
@@ -203,7 +205,11 @@ class ApproximateQAgent(PacmanQAgent):
         """
         # You may use self.getLegalActions(state) and self.getQValue(state,action)
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        features = self.featExtractor.getFeatures(state, action)
+        diff = reward + self.discount * self.getValue(nextState) - self.getQValue(state, action)
+        for key in features.keys():
+            self.weights[key] += self.alpha * diff * features[key]
+        # util.raiseNotDefined()
 
     def final(self, state):
         "Called at the end of each game."
